@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const count = listings.length;
             const heroText = document.querySelector('.dirherocont h3');
             if (heroText) {
-                heroText.textContent = `Hay ${count} corredoras de propiedades que ofrecen una amplia variedad de servicios inmobiliarios.`;
+                heroText.textContent = `Hay ${count} consultoras que ofrecen una variedad de servicios en esta region.`;
             }
 
             // Calculate total pages and render the first page
