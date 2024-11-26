@@ -1,15 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
-       // Google Sheets API settings
+
+    const searchInput = document.getElementById('job-search'); // Reference the search input field
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value.trim();
+            filterListings(query); // Call filter function on input change
+        });
+    } else {
+        console.warn('Search input field not found.');
+    }    
+
+    let allListings = []; // Global storage for fetched listings
     
-       const dataContainer = document.getElementById('data-container');
-       const sheetName = dataContainer.getAttribute('data-sheet-name') || 'DefaultSheetName';
-   
-       const workerUrl = `https://buscarp088.directoriospro.workers.dev/?sheetName=${sheetName}`;
-   
-       let currentPage = 1;
-       const resultsPerPage = 10;
-       let totalPages = 1;
-     
+    // Google Sheets API settings
+
+    const dataContainer = document.getElementById('data-container');
+    const sheetName = dataContainer.getAttribute('data-sheet-name') || 'DefaultSheetName';
+
+    const workerUrl = `https://buscarp088.directoriospro.workers.dev/?sheetName=${sheetName}`;
+
+    let currentPage = 1;
+    const resultsPerPage = 10;
+    let totalPages = 1;
+    
        
     console.log("DOMContentLoaded triggered");
 
@@ -180,6 +194,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
             });
 
+            allListings = listings; // <-- Add this line here to store listings globally for filtering
+            console.log("All Listings:", allListings);
+
             // Sort listings: Sponsored > Verified > Rating
             listings.sort((a, b) => {
                 if (a.sponsored !== b.sponsored) return b.sponsored - a.sponsored; // Sponsored first
@@ -209,13 +226,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function filterListings(query) {
+        console.log("Search query:", query);
+        console.log("All Listings (before filtering):", allListings);
+    
+        const filteredListings = allListings.filter(listing => {
+            const searchText = query.toLowerCase();
+            const name = (listing.name || "").toLowerCase();
+            const address = (listing.address || "").toLowerCase();
+            const region = (listing.region || "").toLowerCase();
+    
+            return (
+                name.includes(searchText) ||
+                address.includes(searchText) ||
+                region.includes(searchText)
+            );
+        });
+    
+        console.log("Filtered Listings:", filteredListings);
+    
+        currentPage = 1;
+        totalPages = Math.ceil(filteredListings.length / resultsPerPage);
+        renderListings(filteredListings, currentPage);
+    }
+    
+
     // Initial fetch and render
     fetchListings();
 });
 
-document.getElementById('buscar-comuna-btn').addEventListener('click', function() {
-    document.getElementById('buscar-por-comuna').scrollIntoView({ behavior: 'smooth' });
-});
+
 
 // Mobile navigation toggle
 document.addEventListener('DOMContentLoaded', function () {
