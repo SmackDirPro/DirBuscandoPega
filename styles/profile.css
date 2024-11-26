@@ -85,11 +85,11 @@
 }
 
 .badge.verified {
-    background-color: #1d9bf0; /* blue color for verified */
+    background-color: var(--color-primary-light); /* blue color for verified */
 }
 
 .badge.sponsored {
-    background-color: #2a9d8f; /* green color for sponsored */
+    background-color: var(--color-accent); /* green color for sponsored */
 }
 
 /* Font Awesome Icons for badges */

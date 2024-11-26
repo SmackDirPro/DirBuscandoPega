@@ -96,7 +96,7 @@
 .listing-verified {
     display: inline-flex;
     align-items: center;
-    color: #5a67d8;
+    color: var(--color-primary);
     font-weight: 500;
     font-size: 0.875rem;
     margin-bottom: 0.75rem;
@@ -273,7 +273,7 @@
         color: white;
         text-decoration: none;
         font-size: 1em;
-        background-color: #ea8933;
+        background-color: var(--color-accent);
         border: none;
         margin-top: 5px;
 }

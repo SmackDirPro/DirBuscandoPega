@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
             image: job.image                 // "Image name (11)"
         };
         localStorage.setItem('selectedJob', JSON.stringify(jobData));
-        window.location.href = `/profile.html?id=${jobData.id}`;
+        window.location.href = `/profileof.html?id=${jobData.id}`;
     }
 
     // Attach to window for direct HTML access

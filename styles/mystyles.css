@@ -5,7 +5,7 @@
     --color-primary-dark: #3A0065;   /* Darker plum for hover states */
     --color-primary-light: #7A33B4;  /* Lighter plum for accents */
     --color-secondary: #F5F5DC;      /* Soft beige for sections */
-    --color-accent: #FF5733;         /* Vibrant magenta accent color */
+    --color-accent: #ef5821;         /* Vibrant magenta accent color */
     
     /* Text Colors */
     --color-text: #2E2E2E;           /* Charcoal black for main text */
@@ -17,7 +17,7 @@
     --color-background: #F0F0F0;        /* Soft beige background */
     --color-background: #FFFFFF;        /* Soft beige background */
     --color-footer: #4B0082;            /* Deep plum for footer */
-    --color-footer-text: #FFC107;       /* Gold for footer text */
+    --color-footer-text: #f8f7f2;       /* Gold for footer text */
     --color-background-light: #f7f7f7; /* Standard white background for sections */
  /*   --color-background-light: #FFFFFF; /* Standard white background for sections */
 
