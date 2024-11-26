@@ -226,6 +226,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function renderNoResultsMessage(message) {
+        const noResultsMessage = document.getElementById('no-results-message');
+        noResultsMessage.style.display = 'block';
+        noResultsMessage.innerHTML = `
+            <h3>Lo lamentamos</h3>
+            <p>${message}</p>
+        `;
+        listingsContainer.innerHTML = ''; // Clear listings container
+        paginationContainer.innerHTML = ''; // Clear pagination
+    }
+    
+    // Function to handle the initial render on page load
+    function handleInitialNoResults() {
+        if (allListings.length === 0) {
+            renderNoResultsMessage(
+                'No hay consultoras especializadas en tu región. Vuelve pronto, estamos actualizando nuestra base de datos todos los días. Síguenos en nuestras redes sociales para estar informado de todos nuestros cambios.'
+            );
+        }
+    }
+
     function filterListings(query) {
         console.log("Search query:", query);
         console.log("All Listings (before filtering):", allListings);
@@ -245,9 +265,20 @@ document.addEventListener('DOMContentLoaded', function () {
     
         console.log("Filtered Listings:", filteredListings);
     
-        currentPage = 1;
-        totalPages = Math.ceil(filteredListings.length / resultsPerPage);
-        renderListings(filteredListings, currentPage);
+        const noResultsMessage = document.getElementById('no-results-message');
+    
+        if (filteredListings.length === 0) {
+        renderNoResultsMessage('No se encontraron resultados con los criterios ingresados.');
+        } else {
+            // Hide the no-results message and display results
+            const noResultsMessage = document.getElementById('no-results-message');
+            noResultsMessage.style.display = 'none';
+            currentPage = 1;
+            totalPages = Math.ceil(filteredListings.length / resultsPerPage);
+            renderListings(filteredListings, currentPage);
+        }
+        console.log(document.getElementById('no-results-message'));
+
     }
     
 
