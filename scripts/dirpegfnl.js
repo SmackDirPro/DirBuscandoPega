@@ -181,6 +181,12 @@ document.addEventListener('DOMContentLoaded', function () {
             // Store all listings globally for filtering
             allListings = listings;
     
+            if (allListings.length === 0) {
+                // Render no-results message when no listings are found
+                handleInitialNoResults();
+                return;
+            }
+
             // Sort listings: Sponsored > Verified
             listings.sort((a, b) => {
                 if (a.sponsored !== b.sponsored) return b.sponsored - a.sponsored; // Sponsored first
@@ -204,6 +210,27 @@ document.addEventListener('DOMContentLoaded', function () {
             return [];
         }
     }
+
+    function renderNoResultsMessage(message) {
+        const noResultsMessage = document.getElementById('no-results-message');
+        noResultsMessage.style.display = 'block';
+        noResultsMessage.innerHTML = `
+            <h3>Lo lamentamos</h3>
+            <p>${message}</p>
+        `;
+        listingsContainer.innerHTML = ''; // Clear listings container
+        paginationContainer.innerHTML = ''; // Clear pagination
+    }
+    
+    // Function to handle the initial render on page load
+    function handleInitialNoResults() {
+        if (allListings.length === 0) {
+            renderNoResultsMessage(
+                'No existen ofertas en esta región por el momento. Pero vuelve pronto, porque estamos verificando ofertas y actualizando nuestra base de datos todos los días. Síguenos en nuestras redes sociales para estar informado de todos nuestros cambios.'
+            );
+        }
+    }
+
     // Filter listings based on search input
     function filterListings(query) {
         const filteredListings = allListings.filter(listing => {
@@ -216,10 +243,19 @@ document.addEventListener('DOMContentLoaded', function () {
             );
         });
 
-        // Reset to the first page and render filtered listings
-        currentPage = 1;
-        totalPages = Math.ceil(filteredListings.length / resultsPerPage);
-        renderListings(filteredListings, currentPage);
+        const noResultsMessage = document.getElementById('no-results-message');
+    
+        if (filteredListings.length === 0) {
+        renderNoResultsMessage('No se encontraron resultados con los criterios ingresados.');
+        } else {
+            // Hide the no-results message and display results
+            const noResultsMessage = document.getElementById('no-results-message');
+            noResultsMessage.style.display = 'none';
+            currentPage = 1;
+            totalPages = Math.ceil(filteredListings.length / resultsPerPage);
+            renderListings(filteredListings, currentPage);
+        }
+        console.log(document.getElementById('no-results-message'));
     }
 
     // Attach search event listener
@@ -228,13 +264,15 @@ document.addEventListener('DOMContentLoaded', function () {
         filterListings(query);
     });
 
+
+    
     // Initial fetch and render
     fetchListings();
 });
 
-document.getElementById('buscar-comuna-btn').addEventListener('click', function() {
-    document.getElementById('buscar-por-comuna').scrollIntoView({ behavior: 'smooth' });
-});
+// document.getElementById('buscar-comuna-btn').addEventListener('click', function() {
+ //    document.getElementById('buscar-por-comuna').scrollIntoView({ behavior: 'smooth' });
+//});
 
 // Mobile navigation toggle
 document.addEventListener('DOMContentLoaded', function () {
