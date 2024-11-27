@@ -68,14 +68,13 @@
         </div>
     </section>
 
-    <!-- Contact Form Section -->
     <section id="contacto" class="contact-section">
         <div class="form-col">
             <h2>Contáctanos Hoy</h2>
-            <p class="form-intro">Únete al directorio líder en Chile y conecta con empresas y candidatos en todo el país. Completa el formulario a continuación para listar tu consultora.</p>
+            <p class="form-intro">Únete al directorio líder conecta con candidatos en todo el país. Completa el formulario a continuación para listar tu consultora.</p>
             
-            <!-- FormSpree Form -->
-            <form action="https://formspree.io/f/xwpevqew" method="POST">
+            <!-- Local Form Handling -->
+            <form id="contactForm">
                 <div class="form-group">
                     <label for="name">Nombre de la Consultora</label>
                     <input type="text" id="name" name="name" required placeholder="Ej: Consultora XYZ">
@@ -90,23 +89,26 @@
                 </div>
                 <div class="form-group">
                     <label for="region">Región</label>
-                    <select id="region" name="region" required>
-                        <option value="">Selecciona una Región</option>
-                        <option value="Metropolitana">Metropolitana</option>
-                        <option value="Valparaíso">Valparaíso</option>
-                        <option value="Maule">Maule</option>
-                        <!-- Add more regions as needed -->
-                    </select>
+                    <input type="text" id="region" name="region" required placeholder="Ej: Metropolitana">
                 </div>
                 <div class="form-group">
                     <label for="message">Mensaje</label>
                     <textarea id="message" name="message" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
                 </div>
+                <!-- Honeypot field -->
+                <div style="display: none;">
+                    <label for="honeypot">No llenar este campo</label>
+                    <input type="text" id="honeypot" name="honeypot">
+                </div>
                 <button type="submit" class="primary-btn">Enviar</button>
             </form>
+            <!-- Success Message Popup -->
+            <div id="successcontactMessage" style="display: none;">
+                Su mensaje se ha enviado correctamente.
+            </div>
         </div>
     </section>
-
+ 
     <!-- FAQ Section -->
     <section class="faq">
         <div class="container">
@@ -130,5 +132,29 @@
     <div id="footer-placeholder"></div>
 
     <script src="/scripts/customscript.js"></script>
+    <script>
+        // Form Submission Handling
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+            const honeypot = document.getElementById('honeypot').value;
+            
+            if (honeypot) {
+                // If the honeypot field is filled, treat it as spam and stop the process
+                alert('Error: No se puede enviar el formulario.'); 
+                return;
+            }
+    
+            // Clear the form inputs
+            this.reset();
+    
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+    
+            // Optional: Hide the message after a few seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000); // Hides message after 5 seconds
+        });
+    </script>
 </body>
 </html>
