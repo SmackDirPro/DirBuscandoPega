@@ -1,5 +1,5 @@
 // Cloudflare Worker URL
- const apiUrl = 'https://rebrok044.directoriospro.workers.dev/';
+ const apiUrl = 'https://buscarp044.directoriospro.workers.dev/';
 
 // Function to fetch agent data from Google Sheets
 async function fetchAgents() {
@@ -30,7 +30,7 @@ function populateAgentCards(agents) {
 
         const agentName = agent[1];       // Name from column 1 (Nombre Corredor)
         const agentDescription = agent[5]; // Description from column 2
-        const agentImage = agent[20] ? `/assets/images/corredores/${agent[20]}` : '/assets/images/corredores/default.jpg'; // Image file name from column 6 (fallback if empty)
+        const agentImage = agent[20] ? `/assets/images/empresas/${agent[20]}` : '/assets/images/empresas/default.jpg'; // Image file name from column 6 (fallback if empty)
         const agentId = agent[0]; // Broker ID
 
         // Create agent card HTML
