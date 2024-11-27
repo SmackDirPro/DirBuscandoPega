@@ -197,6 +197,12 @@ document.addEventListener('DOMContentLoaded', function () {
             allListings = listings; // <-- Add this line here to store listings globally for filtering
             console.log("All Listings:", allListings);
 
+            if (allListings.length === 0) {
+                // Render no-results message when no listings are found
+                handleInitialNoResults();
+                return;
+            }
+
             // Sort listings: Sponsored > Verified > Rating
             listings.sort((a, b) => {
                 if (a.sponsored !== b.sponsored) return b.sponsored - a.sponsored; // Sponsored first
