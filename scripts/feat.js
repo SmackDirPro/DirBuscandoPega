@@ -1,4 +1,4 @@
-const apiurlfeat = 'https://rebrok044.directoriospro.workers.dev/';
+const apiurlfeat = 'https://buscarp044.directoriospro.workers.dev/';
 
 
 // Fetch broker data from Cloudflare Worker
@@ -42,7 +42,7 @@ function parseBrokerData(dataRows, brokerId) {
         region: brokerRow[4],
         description: brokerRow[5],
         website: brokerRow[6],
-        instagram: brokerRow[7],
+        socialmedia: brokerRow[7],
         email: brokerRow[8],
         phone: brokerRow[9],
         specialties: brokerRow[10],
@@ -53,7 +53,7 @@ function parseBrokerData(dataRows, brokerId) {
         verified: brokerRow[16].toLowerCase() === 'true', // Convert to lowercase
         sponsored: brokerRow[18].toLowerCase() === 'true', // Convert to lowercase
         experience: `${brokerRow[19]} años`, //`${row[19]} años de experiencia`
-        image: brokerRow[20] ? `/assets/images/corredores/${brokerRow[20]}` : '/assets/images/corredores/default.jpg',
+        image: brokerRow[20] ? `/assets/images/empresas/${brokerRow[20]}` : '/assets/images/empresas/default.jpg',
         gmapembed: brokerRow[21]
     };  
 }
@@ -72,6 +72,9 @@ function displayBrokerData(brokerData) {
     });
 
     // Populate other broker details with null checks
+    if (document.getElementById('broker-description')) {
+        document.getElementById('broker-description').textContent = brokerData.description;
+    }
     if (document.getElementById('broker-address')) {
         document.getElementById('broker-address').textContent = brokerData.address + brokerData.city;
     }
@@ -108,9 +111,25 @@ function displayBrokerData(brokerData) {
     if (document.getElementById('google-rating')) {
         document.getElementById('google-rating').textContent = brokerData.googleRating || 'N/A';
     }
-    if (document.getElementById('instagram-link')) {
-        document.getElementById('instagram-link').textContent = brokerData.instagram;
-        document.getElementById('instagram-link').href = brokerData.instagram || '#';
+    if (document.getElementById('socialmedia-link')) {
+        const instagramLinkElement = document.getElementById('socialmedia-link');
+        const url = brokerData.socialmedia;
+    
+        // Set the href attribute
+        instagramLinkElement.href = url || '#';
+    
+        // Check URL and set text accordingly
+        if (url) {
+            if (url.includes('instagram.com')) {
+                instagramLinkElement.textContent = 'Ver Instagram';
+            } else if (url.includes('linkedin.com')) {
+                instagramLinkElement.textContent = 'Ver LinkedIn';
+            } else {
+                instagramLinkElement.textContent = 'Ver Perfil'; // Default text for other links
+            }
+        } else {
+            instagramLinkElement.textContent = 'No link available';
+        }
     }
     if (document.getElementById('broker-email')) {
         document.getElementById('broker-email').textContent = brokerData.email;

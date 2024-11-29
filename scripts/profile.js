@@ -69,7 +69,7 @@ if (!brokerData.sponsored) {
     document.querySelector('.featured-agents').style.display = 'none';
 }
 
-const apiUrl = 'https://rebrok044.directoriospro.workers.dev/';
+const apiUrl = 'https://buscarp044.directoriospro.workers.dev/';
 
 // Function to fetch data from Cloudflare Worker
 async function fetchSponsoredAgents() {
@@ -112,7 +112,7 @@ function displaySponsoredAgents(sponsoredAgents) {
     sponsoredAgents.forEach(agent => {
         const agentName = agent[1]; // Broker name
         const agentDescription = agent[5] || "Descripción no disponible";
-        const agentImage = agent[20] ? `/assets/images/corredores/${agent[20]}` : '/assets/images/corredores/default.jpg';
+        const agentImage = agent[20] ? `/assets/images/empresas/${agent[20]}` : '/assets/images/empresas/default.jpg';
         const agentId = agent[0]; // Broker ID
 
         const agentCard = document.createElement('div');
@@ -142,5 +142,6 @@ window.location.href = 'featured.html'; // Redirect to featured.html
 
 // Call the function to fetch and display sponsored agents
 fetchSponsoredAgents();
+
 
 
