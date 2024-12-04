@@ -200,6 +200,52 @@
 }
 
 
+.share-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4e0856;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.share-button:hover {
+    background-color: #0056b3;
+}
+
+.share-button i {
+    margin-right: 8px;
+}
+
+.action-buttons-container {
+    display: flex;
+    justify-content: center; /* Center align horizontally */
+    align-items: center; /* Center align vertically */
+    gap: 20px; /* Space between the buttons */
+    margin-top: 20px;
+}
+
+.action-buttons-container .button {
+    flex: 1; /* Optional: make buttons equal width */
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .action-buttons-container {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px; /* Reduce spacing */
+    }
+}
 
 
 #additional-info h3 {

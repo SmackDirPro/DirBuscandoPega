@@ -191,10 +191,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Sort listings: Sponsored > Verified
             listings.sort((a, b) => {
-                if (a.sponsored !== b.sponsored) return b.sponsored - a.sponsored; // Sponsored first
-                return b.verified - a.verified; // Then verified
+                // Sponsored first
+                if (a.sponsored !== b.sponsored) return b.sponsored - a.sponsored;
+            
+                // Then verified
+                if (a.verified !== b.verified) return b.verified - a.verified;
+            
+                // Fallback: If all are sponsored and verified, use date or random
+                if (a.fechapub && b.fechapub) {
+                    // Sort by publication date if both have it
+                    return new Date(b.fechapub) - new Date(a.fechapub);
+                }
+            
+                // If no date, fallback to random order
+                return Math.random() - 0.5;
             });
-    
+            
             // Update the number of jobs in the Hero section
             const count = listings.length;
             const heroText = document.querySelector('.dirherocont h3');

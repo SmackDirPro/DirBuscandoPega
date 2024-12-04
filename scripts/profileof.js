@@ -69,3 +69,36 @@ function formatFecha(fecha) {
         return null;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const shareButton = document.getElementById('share-button');
+    const jobData = JSON.parse(localStorage.getItem('selectedJob'));
+
+    shareButton.addEventListener('click', () => {
+        const shareUrl = window.location.href;
+        const shareTitle = jobData.position || 'Oferta Laboral';
+        const shareText = `Consulta esta oferta laboral para el cargo de ${jobData.position || 'cargo no especificado'} en ${jobData.city || 'ciudad no especificada'}.`;
+
+        if (navigator.share) {
+            // Web Share API for mobile and modern browsers
+            navigator.share({
+                title: shareTitle,
+                text: shareText,
+                url: shareUrl,
+            }).then(() => {
+                console.log('Compartido exitosamente');
+            }).catch((error) => {
+                console.error('Error al compartir:', error);
+            });
+        } else {
+            // Fallback for unsupported devices: Copy link to clipboard
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = shareUrl;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Enlace copiado al portapapeles.');
+        }
+    });
+});
