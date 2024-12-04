@@ -34,8 +34,29 @@ if (brokerData) {
     // Additional information
     document.getElementById('google-reviews').textContent = brokerData.googleReviews;
     document.getElementById('google-rating').textContent = brokerData.googleRating;
-    document.getElementById('instagram-link').textContent = brokerData.instagram;
-    document.getElementById('instagram-link').href = brokerData.instagram;
+    // document.getElementById('instagram-link').textContent = brokerData.instagram;
+  //   document.getElementById('instagram-link').href = brokerData.instagram;
+
+    if (document.getElementById('instagram-link')) {
+        const instagramLinkElement = document.getElementById('instagram-link');
+        const url = brokerData.instagram;
+    
+        // Set the href attribute
+        instagramLinkElement.href = url || '#';
+    
+        // Check URL and set text accordingly
+        if (url) {
+            if (url.includes('instagram.com')) {
+                instagramLinkElement.textContent = 'Ver Instagram';
+            } else if (url.includes('linkedin.com')) {
+                instagramLinkElement.textContent = 'Ver LinkedIn';
+            } else {
+                instagramLinkElement.textContent = 'Ver Perfil'; // Default text for other links
+            }
+        } else {
+            instagramLinkElement.textContent = 'No link available';
+        }
+    }
 
     // Display badges if broker is verified or sponsored
     if (brokerData.verified) {
@@ -82,7 +103,7 @@ async function fetchSponsoredAgents() {
 
         // Filter sponsored agents starting from row 8, ensuring they match the broker's region
         const sponsoredAgents = data.values.slice(6).filter(row => {
-            return String(row[18]).toUpperCase() === "TRUE" && row[4] === brokerData.region;
+            return String(row[18]).toUpperCase() === "TRUE";
         });
 
         if (sponsoredAgents.length === 0) {
@@ -99,9 +120,29 @@ async function fetchSponsoredAgents() {
 
 
 // Helper function to select random agents
+//function getRandomAgents(agents, count) {
+  //  const shuffled = agents.sort(() => 0.5 - Math.random());
+    //return shuffled.slice(0, count);
+//}
+
+// Helper function to select random agents without repetition
 function getRandomAgents(agents, count) {
-    const shuffled = agents.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
+    if (agents.length <= count) {
+        return agents; // Return all agents if the list size is smaller than the count
+    }
+
+    const selectedAgents = [];
+    const usedIndices = new Set();
+
+    while (selectedAgents.length < count) {
+        const randomIndex = Math.floor(Math.random() * agents.length);
+        if (!usedIndices.has(randomIndex)) {
+            usedIndices.add(randomIndex);
+            selectedAgents.push(agents[randomIndex]);
+        }
+    }
+
+    return selectedAgents;
 }
 
 // Function to display sponsored agents
