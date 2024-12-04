@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('job-objectives').textContent = jobData.objectives || 'Objetivos no disponibles';
         document.getElementById('job-functions').textContent = jobData.functions || 'Funciones no disponibles';
         document.getElementById('job-requirements').textContent = jobData.requirements || 'Requisitos no disponibles';
+        document.getElementById('fecha-public').textContent = formatFecha(jobData.fechapub) || 'Fecha no disponible';
 
         // Badges
         if (jobData.verified) {
@@ -51,3 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('No job data found in localStorage.');
     }
 });
+
+function formatFecha(fecha) {
+    if (!fecha) return null;
+
+    try {
+        // Convert serialized date to JavaScript Date
+        const excelEpoch = new Date(1899, 11, 30); // Excel epoch starts from December 30, 1899
+        const date = new Date(excelEpoch.getTime() + (fecha) * 24 * 60 * 60 * 1000);
+
+        // Format the date as "25-Nov-2024"
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString('en-GB', options).replace(',', '').replace(/\s/g, '-');
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return null;
+    }
+}

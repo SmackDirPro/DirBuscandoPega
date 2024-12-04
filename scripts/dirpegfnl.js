@@ -47,12 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
             jobLink: job.jobLink,            // "Link a trabajo Web (4)"
             position: job.position,          // "Cargo (5)"
             description: job.description,    // "Descripción (6)"
-            objectives: job.objectives,      // "Objetivos (7)"
-            functions: job.functions,        // "Funciones (7)"
-            requirements: job.requirements,  // "Requisitos (8)"
-            verified: job.verified,          // "Verificado (Y/N) (9)"
-            sponsored: job.sponsored,        // "Sponsored (Y/N) (10)"
-            image: job.image                 // "Image name (11)"
+            objectives: job.objectives,      // "Objetivos "
+            functions: job.functions,        // "Funciones"
+            requirements: job.requirements,  // "Requisitos"
+            verified: job.verified,          // "Verificado (Y/N) "
+            sponsored: job.sponsored,        // "Sponsored (Y/N) "
+            image: job.image,                // "Image name (11)"
+            fechapub: job.fechapub           // "Fecha de Publicacion"
         };
         localStorage.setItem('selectedJob', JSON.stringify(jobData));
         window.location.href = `/profileof.html?id=${jobData.id}`;
@@ -174,7 +175,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     requirements: row[10],                 // "Requisitos (8)"
                     verified: verified,                    
                     sponsored: sponsored,     
-                    image: row[13] ? `/assets/images/empresas/${row[13]}` : '/assets/images/empresas/default.jpg' // "Image name (11)"
+                    image: row[13] ? `/assets/images/empresas/${row[13]}` : '/assets/images/empresas/default.jpg', // "Image name (11)"
+                    fechapub: row[14],                     // "Fecha Publicacion
                 };
             });
     
