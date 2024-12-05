@@ -18,11 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const apiUrl = `https://ofertasp4488.directoriospro.workers.dev/?id=${jobId}`;
             const response = await fetch(apiUrl);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
             jobData = await response.json();
 
             if (jobData.error) {
@@ -35,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('Failed to load job details. Please try again later.');
             return;
         }
-
     }
 
     // Populate the profile page with job data
