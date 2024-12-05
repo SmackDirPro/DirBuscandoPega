@@ -1,38 +1,42 @@
 document.addEventListener('DOMContentLoaded', async () => {
     let jobData = JSON.parse(localStorage.getItem('selectedJob'));
 
-    if (!jobData) {
-        console.log('No job data in localStorage. Fetching dynamically...');
+    if (!jobData || !jobData.image) {
+        console.log('No job data or image in localStorage. Fetching dynamically...');
         const urlParams = new URLSearchParams(window.location.search);
         const jobId = urlParams.get('id');
-
+    
         if (!jobId) {
             alert('No job ID found in the URL.');
             window.location.href = '/'; // Redirect to homepage
             return;
         }
-
+    
         try {
             const apiUrl = `https://ofertasp4488.directoriospro.workers.dev/?id=${jobId}`;
             const response = await fetch(apiUrl);
-
+    
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
-            jobData = await response.json();
-
-            if (jobData.error) {
+    
+            const fetchedData = await response.json();
+    
+            if (fetchedData.error) {
                 alert('Job not found. Redirecting to the homepage.');
                 window.location.href = '/'; // Redirect if job not found
                 return;
             }
+    
+            // Update jobData with fetched data
+            jobData = { ...jobData, ...fetchedData }; // Merge `localStorage` and fetched data
         } catch (error) {
             console.error('Error fetching job data:', error);
             alert('Failed to load job details. Please try again later.');
             return;
         }
     }
+    
 
     // Add the mapping layer here
     if (!jobData.recruiterName && jobData['Nombre Reclutadora (1)']) {
@@ -48,7 +52,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         jobData.requirements = jobData['Requisitos (8)'];
         jobData.verified = jobData['Verificado (Y/N) (9)'] === 'TRUE';
         jobData.sponsored = jobData['Sponsored (Y/N) (10)'] === 'TRUE';
-        jobData.image = jobData['Image name (11)'] || 'default.jpg'; // Add fallback
+        jobData.image = jobData['Image name (11)'] 
+        ? `/assets/images/empresas/${jobData['Image name (11)']}` 
+        : '/assets/images/empresas/default.jpg';
         jobData.fechapub = jobData['Fecha Publicacion (12)'];
     }
 
@@ -90,18 +96,15 @@ function populateJobDetails(jobData) {
         websiteButtonDescription.style.display = 'none';
     }
 
+    // Display image
     const imageContainer = document.querySelector('.broker-image-container');
-
-    // Fallback to dynamically fetch the image from the worker if not available in jobData
-    const imageUrl = jobData.image 
-        ? `/assets/images/empresas/${jobData.image}` 
-        : `/assets/images/empresas/default.jpg`;
-    
-    console.log('Image URL:', imageUrl); // Debugging log
-    
-    // Add onerror to load the default image if the original one fails
-    imageContainer.innerHTML = `<img src="${imageUrl}" alt="${jobData.recruiterName || 'Sin Imagen'}" 
-        onerror="this.src='/assets/images/empresas/default.jpg';">`;
+    imageContainer.innerHTML = `
+        <img 
+            src="${jobData.image}" 
+            alt="${jobData.recruiterName || 'Sin Imagen'}" 
+            onerror="this.src='/assets/images/empresas/default.jpg';"
+        >
+    `;
     
 }
 
@@ -138,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shareButton.addEventListener('click', () => {
         const shareUrl = `${window.location.origin}/profileof.html?id=${jobData.id}`;
         const shareTitle = jobData.position || 'Oferta Laboral';
-        const shareText = `Consulta esta oferta laboral para el cargo de ${jobData.position || 'cargo no especificado'} en ${jobData.city || 'ciudad no especificada'}.`;
+        const shareText = `Revisa esta oferta laboral de ${jobData.recruiterName || 'reclutador no especificado'} para el cargo de ${jobData.position || 'cargo no especificado'} en ${jobData.city || 'ciudad no especificada'}.`;
 
         if (navigator.share) {
             // Web Share API for mobile and modern browsers
