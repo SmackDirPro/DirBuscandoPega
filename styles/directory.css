@@ -276,6 +276,7 @@
         background-color: var(--color-accent);
         border: none;
         margin-top: 5px;
+        cursor: pointer;
 }
 
 /* Styles for "Buscar por Comuna" Banner Section */
