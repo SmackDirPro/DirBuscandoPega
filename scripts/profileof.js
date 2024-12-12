@@ -74,7 +74,7 @@ function mapJobData(jobData) {
 
 function populateJobDetails(jobData) {
     document.getElementById('job-recruiter').textContent = jobData.recruiterName || 'Reclutadora no disponible';
-    document.getElementById('job-employer').textContent = jobData.employerName || 'Contratadora no disponible';
+    document.getElementById('job-employer').textContent = jobData.employerName || 'Contratante no disponible';
     document.getElementById('job-city').textContent = jobData.city || 'Ciudad no disponible';
     document.getElementById('job-region').textContent = jobData.region || 'Región no disponible';
     document.getElementById('job-position').textContent = jobData.position || 'Cargo no disponible';
