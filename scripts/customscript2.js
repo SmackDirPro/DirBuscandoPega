@@ -136,7 +136,7 @@ async function fetchRecentJobs() {
         <div class="job-image" style="background-image: url('${image}');"></div>
         <h3>${job['Cargo (6)'] || 'Cargo no disponible'}</h3>
         <p><strong>Reclutadora:</strong> ${job['Nombre Reclutadora (1)'] || 'No especificada'}</p>
-        <p><strong>Contratante:</strong> ${job['Nombre Contratadora (2)'] || 'No especificada'}</p>
+        <p><strong>Contratante:</strong> ${job['Nombre Contratante (2)'] || 'No especificada'}</p>
         <p><strong>Ciudad:</strong> ${job['Ciudad Cargo (3)'] || 'No especificada'}</p>
         <p><strong>Fecha de Publicación:</strong> ${job['Fecha Publicacion (14)'] || 'No disponible'}</p>
         <a href="/profileof.html?id=${job['#Id']}" class="job-cta">Más Info</a>
