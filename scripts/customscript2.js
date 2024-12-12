@@ -100,3 +100,53 @@ document.querySelectorAll('.faq-item h3').forEach(item => {
         item.parentElement.classList.toggle('open');
     });
 });
+
+
+
+async function fetchRecentJobs() {
+    const apiUrl = 'https://ofertasrec088.directoriospro.workers.dev/'; // Replace with your worker's URL
+    try {
+      const response = await fetch(apiUrl);
+      const jobs = await response.json();
+  
+      if (jobs.error) {
+        console.error('Error fetching recent jobs:', jobs.error);
+        return [];
+      }
+      return jobs;
+    } catch (error) {
+      console.error('Error fetching recent jobs:', error);
+      return [];
+    }
+  }
+  
+  function populateRecentJobs(jobs) {
+    const jobsGrid = document.querySelector('.recent-jobs .jobs-grid');
+  
+    jobs.forEach(job => {
+      const jobCard = document.createElement('div');
+      jobCard.classList.add('job-card');
+  
+      // Ensure correct keys are used based on your sheet headers
+      const image = job['Image name (13)']
+        ? `/assets/images/empresas/${job['Image name (13)']}`
+        : '/assets/images/empresas/default.jpg';
+  
+      jobCard.innerHTML = `
+        <div class="job-image" style="background-image: url('${image}');"></div>
+        <h3>${job['Cargo (6)'] || 'Cargo no disponible'}</h3>
+        <p><strong>Reclutadora:</strong> ${job['Nombre Reclutadora (1)'] || 'No especificada'}</p>
+        <p><strong>Contratadora:</strong> ${job['Nombre Contratadora (2)'] || 'No especificada'}</p>
+        <p><strong>Ciudad:</strong> ${job['Ciudad Cargo (3)'] || 'No especificada'}</p>
+        <p><strong>Fecha de Publicación:</strong> ${job['Fecha Publicacion (14)'] || 'No disponible'}</p>
+        <a href="/profileof.html?id=${job['#Id']}" class="job-cta">Más Info</a>
+      `;
+  
+      jobsGrid.appendChild(jobCard);
+    });
+  }
+  
+  
+  // Fetch and populate recent jobs
+  fetchRecentJobs().then(jobs => populateRecentJobs(jobs));
+  

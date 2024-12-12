@@ -1,67 +1,76 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    let jobData = JSON.parse(localStorage.getItem('selectedJob'));
+    const urlParams = new URLSearchParams(window.location.search);
+    const jobId = urlParams.get('id');
 
-    if (!jobData || !jobData.image) {
-        console.log('No job data or image in localStorage. Fetching dynamically...');
-        const urlParams = new URLSearchParams(window.location.search);
-        const jobId = urlParams.get('id');
-    
-        if (!jobId) {
-            alert('No job ID found in the URL.');
-            window.location.href = '/'; // Redirect to homepage
-            return;
-        }
-    
-        try {
-            const apiUrl = `https://ofertasp4488.directoriospro.workers.dev/?id=${jobId}`;
-            const response = await fetch(apiUrl);
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-    
-            const fetchedData = await response.json();
-    
-            if (fetchedData.error) {
-                alert('Job not found. Redirecting to the homepage.');
-                window.location.href = '/'; // Redirect if job not found
-                return;
-            }
-    
-            // Update jobData with fetched data
-            jobData = { ...jobData, ...fetchedData }; // Merge `localStorage` and fetched data
-        } catch (error) {
-            console.error('Error fetching job data:', error);
-            alert('Failed to load job details. Please try again later.');
-            return;
-        }
-    }
-    
-
-    // Add the mapping layer here
-    if (!jobData.recruiterName && jobData['Nombre Reclutadora (1)']) {
-        jobData.recruiterName = jobData['Nombre Reclutadora (1)'];
-        jobData.employerName = jobData['Nombre Contratadora (1)'];
-        jobData.city = jobData['Ciudad Cargo (2)'];
-        jobData.region = jobData['Region Cargo (3)'];
-        jobData.jobLink = jobData['Link a trabajo Web (4)'];
-        jobData.position = jobData['Cargo (5)'];
-        jobData.description = jobData['Descripción (6)'];
-        jobData.objectives = jobData['Objetivos (7)'];
-        jobData.functions = jobData['Funciones (7)'];
-        jobData.requirements = jobData['Requisitos (8)'];
-        jobData.verified = jobData['Verificado (Y/N) (9)'] === 'TRUE';
-        jobData.sponsored = jobData['Sponsored (Y/N) (10)'] === 'TRUE';
-        jobData.image = jobData['Image name (11)'] 
-        ? `/assets/images/empresas/${jobData['Image name (11)']}` 
-        : '/assets/images/empresas/default.jpg';
-        jobData.fechapub = jobData['Fecha Publicacion (12)'];
+    if (!jobId) {
+        alert('No job ID found in the URL.');
+        window.location.href = '/'; // Redirect to homepage
+        return;
     }
 
-    // Populate the profile page with job data
-    populateJobDetails(jobData);
+    // Check localStorage cache
+    const cachedData = JSON.parse(localStorage.getItem(`job_${jobId}`));
+    const cacheTimestamp = localStorage.getItem(`job_${jobId}_timestamp`);
+    const cacheDuration = 10 * 60 * 1000; // Cache duration: 10 minutes in milliseconds
+
+    if (cachedData && cacheTimestamp && Date.now() - cacheTimestamp < cacheDuration) {
+        console.log('Using cached data');
+        populateJobDetails(cachedData);
+        return;
+    }
+
+    try {
+        const apiUrl = `https://ofertasp4488.directoriospro.workers.dev/?id=${jobId}`;
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jobData = await response.json();
+
+        if (jobData.error) {
+            alert('Job not found. Redirecting to the homepage.');
+            window.location.href = '/'; // Redirect if job not found
+            return;
+        }
+
+        // Map and transform the job data
+        const mappedJobData = mapJobData(jobData);
+
+        // Save to localStorage for caching
+        localStorage.setItem(`job_${jobId}`, JSON.stringify(mappedJobData));
+        localStorage.setItem(`job_${jobId}_timestamp`, Date.now());
+
+        // Populate the profile page with job data
+        populateJobDetails(mappedJobData);
+    } catch (error) {
+        console.error('Error fetching job data:', error);
+        alert('Failed to load job details. Please try again later.');
+    }
 });
 
+
+function mapJobData(jobData) {
+    return {
+        recruiterName: jobData['Nombre Reclutadora (1)'],
+        employerName: jobData['Nombre Contratadora (2)'],
+        city: jobData['Ciudad Cargo (3)'],
+        region: jobData['Region Cargo (4)'],
+        jobLink: jobData['Link a trabajo Web (5)'],
+        position: jobData['Cargo (6)'],
+        description: jobData['Descripción (7)'],
+        objectives: jobData['Objetivos (8)'],
+        functions: jobData['Funciones (9)'],
+        requirements: jobData['Requisitos (10)'],
+        verified: jobData['Verificado (Y/N) (11)'] === 'TRUE',
+        sponsored: jobData['Sponsored (Y/N) (12)'] === 'TRUE',
+        image: jobData['Image name (13)']
+            ? `/assets/images/empresas/${jobData['Image name (13)']}`
+            : '/assets/images/empresas/default.jpg',
+        fechapub: jobData['Fecha Publicacion (14)'],
+    };
+}
 
 function populateJobDetails(jobData) {
     document.getElementById('job-recruiter').textContent = jobData.recruiterName || 'Reclutadora no disponible';
@@ -81,18 +90,14 @@ function populateJobDetails(jobData) {
     document.getElementById('verified-badge').style.display = jobData.verified ? 'inline-block' : 'none';
     document.getElementById('sponsored-badge').style.display = jobData.sponsored ? 'inline-block' : 'none';
 
-    // Set up "Visitar Sitio Web" button to redirect to the job application page
+    // Set up "Visitar Sitio Web" button
     const websiteButtonHero = document.getElementById('website-button-hero');
-    if (jobData.jobLink) {
-        websiteButtonHero.href = jobData.jobLink;
-    } else {
-        websiteButtonHero.style.display = 'none';
-    }
-
     const websiteButtonDescription = document.getElementById('website-button-description');
     if (jobData.jobLink) {
+        websiteButtonHero.href = jobData.jobLink;
         websiteButtonDescription.href = jobData.jobLink;
     } else {
+        websiteButtonHero.style.display = 'none';
         websiteButtonDescription.style.display = 'none';
     }
 
@@ -105,64 +110,18 @@ function populateJobDetails(jobData) {
             onerror="this.src='/assets/images/empresas/default.jpg';"
         >
     `;
-    
 }
 
 function formatFecha(fecha) {
-    if (!fecha) return 'Fecha no disponible'; // Handle empty or null dates
+    if (!fecha) return 'Fecha no disponible';
 
     try {
-        // Check if `fecha` is a standard date string (e.g., "2024-11-27")
-        if (isNaN(fecha)) {
-            const date = new Date(fecha); // Parse the date string
-            if (isNaN(date.getTime())) throw new Error('Invalid date format');
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return date.toLocaleDateString('en-GB', options).replace(',', '').replace(/\s/g, '-');
-        }
-
-        // Handle Excel serialized date format
-        const excelEpoch = new Date(1899, 11, 30); // Excel epoch starts from December 30, 1899
-        const date = new Date(excelEpoch.getTime() + (fecha * 24 * 60 * 60 * 1000));
+        const date = new Date(fecha);
+        if (isNaN(date.getTime())) throw new Error('Invalid date format');
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return date.toLocaleDateString('en-GB', options).replace(',', '').replace(/\s/g, '-');
+        return date.toLocaleDateString('es-CL', options);
     } catch (error) {
         console.error('Error formatting date:', error);
         return 'Fecha no disponible';
     }
 }
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const shareButton = document.getElementById('share-button');
-    const jobData = JSON.parse(localStorage.getItem('selectedJob')) || {}; // Use empty object if localStorage is missing
-
-    shareButton.addEventListener('click', () => {
-        const shareUrl = `${window.location.origin}/profileof.html?id=${jobData.id}`;
-        const shareTitle = jobData.position || 'Oferta Laboral';
-        const shareText = `Revisa esta oferta laboral de ${jobData.recruiterName || 'reclutador no especificado'} para el cargo de ${jobData.position || 'cargo no especificado'} en ${jobData.city || 'ciudad no especificada'}.`;
-
-        if (navigator.share) {
-            // Web Share API for mobile and modern browsers
-            navigator.share({
-                title: shareTitle,
-                text: shareText,
-                url: shareUrl,
-            }).then(() => {
-                console.log('Compartido exitosamente');
-            }).catch((error) => {
-                console.error('Error al compartir:', error);
-            });
-        } else {
-            // Fallback for unsupported devices: Copy link to clipboard
-            const tempInput = document.createElement('input');
-            document.body.appendChild(tempInput);
-            tempInput.value = shareUrl;
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            alert('Enlace copiado al portapapeles.');
-        }
-    });
-});

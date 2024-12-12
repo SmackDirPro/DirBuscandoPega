@@ -14,7 +14,7 @@
     --color-text-white: #ffffff;     /* White text */
     
     /* Background Colors */
-    --color-background: #F0F0F0;        /* Soft beige background */
+   /* --color-background: #F0F0F0;        /* Soft beige background */
     --color-background: #FFFFFF;        /* Soft beige background */
     --color-footer: #4B0082;            /* Deep plum for footer */
     --color-footer-text: #f8f7f2;       /* Gold for footer text */
@@ -506,7 +506,7 @@ h1 {
 /* Section Container */
 .featured-agents {
     padding: 5rem 0;
-    background-color: var(--color-background-light);
+    background-color: var(--color-background);
 }
 
 /* Section Header */
@@ -596,6 +596,83 @@ h1 {
         margin: 0 1rem;
     }
 }
+
+
+/* #### RECENT JOBS SECTION STYLES #### */
+/* Section Container */
+.recent-jobs {
+    padding: 5rem 0;
+    background-color: var(--color-background-light);
+}
+
+/* Section Header */
+.recent-jobs h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    color: var(--color-heading);
+}
+
+/* Jobs Grid */
+.jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Job Cards */
+.job-card {
+    background-color: var(--color-background);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+}
+
+.job-image {
+    width: 100%;
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.job-card h3 {
+    padding: 1.5rem 1.5rem 0.5rem;
+    font-size: 1.25rem;
+    color: var(--color-heading);
+}
+
+.job-card p {
+    padding: 0 1.5rem 0.5rem;
+    color: var(--color-text-light);
+}
+
+/* Job CTA Button */
+.job-cta {
+    display: block;
+    margin: 1rem auto;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-accent);
+    color: var(--color-text-white);
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.job-cta:hover {
+    background-color: var(--color-primary-dark);
+}
+
+
 
 /* #### SOCIAL PROOF SECTION STYLES #### */
 .social-proof {
