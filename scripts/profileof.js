@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function mapJobData(jobData) {
     return {
         recruiterName: jobData['Nombre Reclutadora (1)'],
-        employerName: jobData['Nombre Contratadora (2)'],
+        employerName: jobData['Nombre Contratante (2)'],
         city: jobData['Ciudad Cargo (3)'],
         region: jobData['Region Cargo (4)'],
         jobLink: jobData['Link a trabajo Web (5)'],
